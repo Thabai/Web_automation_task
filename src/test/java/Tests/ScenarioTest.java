@@ -2,11 +2,20 @@ package Tests;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Stream;
+
+import static org.junit.Assert.assertEquals;
+import static org.openqa.selenium.By.*;
 
 public class ScenarioTest {
 
@@ -18,35 +27,55 @@ public class ScenarioTest {
             driver = new ChromeDriver();
             driver.get("https://testscriptdemo.com/");
             driver.manage().window();
-            driver.findElement(By.linkText("Black pants")).click();
-            Thread.sleep(3000);
-            driver.findElement(By.xpath("//span[contains(text(), 'Add to wishlist')]")).click();
-            Thread.sleep(3000);
+            driver.findElement(linkText("Bikini")).click();
+            Thread.sleep(1000);
+            driver.findElement(xpath("//span[contains(text(), 'Add to wishlist')]")).click();
+            Thread.sleep(1000);
             driver.navigate().back();
-            driver.findElement(By.linkText("Modern")).click();
-            driver.findElement(By.xpath("//span[contains(text(), 'Add to wishlist')]")).click();
+            driver.findElement(linkText("Modern")).click();
+            Thread.sleep(1000);
+            driver.findElement(xpath("//span[contains(text(), 'Add to wishlist')]")).click();
+            Thread.sleep(1000);
             driver.navigate().back();
-            driver.findElement(By.linkText("Single Shirt")).click();
-            driver.findElement(By.xpath("//span[contains(text(), 'Add to wishlist')]")).click();
-            driver.navigate().back();
-            driver.findElement(By.linkText("Top pants upper")).click();
-            driver.findElement(By.xpath("//span[contains(text(), 'Add to wishlist')]")).click();
-            Thread.sleep(3000);
+            driver.findElement(linkText("Single Shirt")).click();
+            Thread.sleep(1000);
+            driver.findElement(xpath("//span[contains(text(), 'Add to wishlist')]")).click();
+            Thread.sleep(1000);
+            driver.get("https://testscriptdemo.com/?product=black-trousers");
+            Thread.sleep(1000);
+            driver.findElement(xpath("//span[contains(text(), 'Add to wishlist')]")).click();
+            Thread.sleep(1000);
         }
 
         @When("I view my wishlist table")
-        public void wishlist_table () throws InterruptedException  {
+        public void wishlist_table () {
             driver.get("https://testscriptdemo.com/?page_id=233&wishlist-action");
         }
 
         @Then("I find total four selected items in my Wishlist")
         public void four_products_wishlist () {
-
+           int wishlist = driver.findElements(By.className("product-thumbnail")).size();
+           int actualAnswer = wishlist -1;
+           int answer = 4;
+            assertEquals(answer, actualAnswer);
         }
 
         @When("I search for lowest price product")
         public void search_lowest_price_product () {
 
+            List<WebElement> price = driver.findElements(xpath("//td[@class='product-price']/ins/span/bdi"));
+            List<String> prices = new ArrayList<String>();
+            for (WebElement e : price)
+            {
+                prices.add(e.getText());
+            }
+
+            List<String> sortedPrices = new ArrayList<String>(prices);
+
+            Collections.sort(sortedPrices);
+            String actualAnswer = sortedPrices.get(0);
+            String answer = "£19.00";
+            assertEquals(answer, actualAnswer);
         }
 
         @And("I am able to add the lowest price item to my cart")
