@@ -12,7 +12,6 @@ import io.cucumber.java.en.When;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Stream;
 
 import static org.junit.Assert.assertEquals;
 import static org.openqa.selenium.By.*;
