@@ -18,6 +18,7 @@ import static org.openqa.selenium.By.*;
 
 public class ScenarioTest {
 
+    String actualPrice;
     WebDriver driver;
 
         @Given("I add four different products to my wish list")
@@ -72,19 +73,25 @@ public class ScenarioTest {
             List<String> sortedPrices = new ArrayList<String>(prices);
 
             Collections.sort(sortedPrices);
-            String actualAnswer = sortedPrices.get(0);
+            actualPrice = sortedPrices.get(0);
             String answer = "£19.00";
-            assertEquals(answer, actualAnswer);
+            assertEquals(answer, actualPrice);
         }
 
         @And("I am able to add the lowest price item to my cart")
-        public void add_lowest_price_product_to_cart () {
-
+        public void add_lowest_price_product_to_cart () throws InterruptedException {
+            Thread.sleep(1000);
+            String lowestPrice = actualPrice.replace("£", "");
+            WebElement addToCart = driver.findElement(xpath("//bdi[contains(text(), '" + lowestPrice +"')]//following::td[2]/a[1]"));
+            addToCart.click();
+            Thread.sleep(1000);
         }
 
         @Then("I am able to verify the item in my cartRequirements")
         public void verify_cart () {
-
+            String cart = driver.findElement(xpath("//span[@class='count']")).getText();
+            String answer = "1";
+            assertEquals(answer, cart);
         }
 
 }
