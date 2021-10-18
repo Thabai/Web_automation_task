@@ -88,10 +88,11 @@ public class ScenarioTest {
         }
 
         @Then("I am able to verify the item in my cartRequirements")
-        public void verify_cart () {
+        public void verify_cart () throws InterruptedException {
             String cart = driver.findElement(xpath("//span[@class='count']")).getText();
             String answer = "1";
             assertEquals(answer, cart);
+            Thread.sleep(1000);
+            driver.close();
         }
-
 }
